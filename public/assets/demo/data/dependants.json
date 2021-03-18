@@ -1,0 +1,9 @@
+
+{
+    "data": [
+        {"id": "1000","name": "Damilola Eludire","gender": "Male","dob": "14/06/1986","address": "Canada","relationship": "Spouse","occupation": "Banker","education": "PHD","vulnerability": "None"},
+        {"id": "1001","name": "Tolani Eludire","gender": "Female","dob": "14/06/1986","address": "Germany","relationship": "Wife","occupation": "Banker","education": "PHD","vulnerability": "None"},
+        {"id": "1002","name": "Damisola Eludire","gender": "Male","dob": "14/06/1986","address": "USA","relationship": "Son","occupation": "Banker","education": "PHD","vulnerability": "None"}
+  ]
+}
+    

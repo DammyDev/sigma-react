@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Redirect } from 'react-router-dom'
 import { Panel } from 'primereact/panel';
 import { Checkbox } from 'primereact/checkbox';
 import { Button } from 'primereact/button';
@@ -14,6 +15,10 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { ProductService } from '../service/ProductService';
 import { EventService } from '../service/EventService';
+
+import { firestore, auth } from '../FirebaseConfig'
+
+//const db=firebase.firestore();
 
 const dropdownCities = [
     { name: 'New York', code: 'NY' },
@@ -54,18 +59,45 @@ const lineData = {
     ]
 };
 
-export const Dashboard = () => {
+export const Dashboard = (props) => {
 
     const [tasksCheckbox, setTasksCheckbox] = useState([]);
     const [dropdownCity, setDropdownCity] = useState(null);
     const [events, setEvents] = useState(null);
     const [products, setProducts] = useState(null);
+    const [projects, setProjects] = useState([]);
+    const [users, setUsers] = useState([]);
+    const [surveys, setSurveys] = useState([]);
 
     useEffect(() => {
+        console.log('..user', props)
+        setProjects([]);
+        setSurveys([]);
+        setUsers([]);
+
         const productService = new ProductService();
         const eventService = new EventService();
         productService.getProductsSmall().then(data => setProducts(data));
         eventService.getEvents().then(data => setEvents(data));
+        
+        firestore.collection("projects").get().then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                setProjects(e => [...e, doc.data()])
+            });
+        });
+
+        firestore.collection("users").get().then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                setUsers(e => [...e, doc.data()])
+            });
+        });
+        
+        firestore.collection("surveys").get().then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                setSurveys(e => [...e, doc.data()])
+            });
+        });
+
     }, []);
 
     const formatCurrency = (value) => {
@@ -82,57 +114,61 @@ export const Dashboard = () => {
         setTasksCheckbox(selectedTasks);
     };
 
+    if (auth.currentUser == null) { 
+        return <Redirect to='/' />
+    }
+
     return (
         <div className="p-grid p-fluid dashboard">
             <div className="p-col-12 p-lg-4">
                 <div className="card summary">
+                    <span className="title">Projects</span>
+                    <span className="detail">Number of projects</span>
+                    <span className="count visitors">{projects.length}</span>
+                </div>
+            </div>
+            <div className="p-col-12 p-lg-4">
+                <div className="card summary">
+                    <span className="title">PAPs</span>
+                    <span className="detail">Number of PAPs</span>
+                    <span className="count purchases">{surveys.length}</span>
+                </div>
+            </div>
+            <div className="p-col-12 p-lg-4">
+                <div className="card summary">
                     <span className="title">Users</span>
-                    <span className="detail">Number of visitors</span>
-                    <span className="count visitors">12</span>
-                </div>
-            </div>
-            <div className="p-col-12 p-lg-4">
-                <div className="card summary">
-                    <span className="title">Sales</span>
-                    <span className="detail">Number of purchases</span>
-                    <span className="count purchases">534</span>
-                </div>
-            </div>
-            <div className="p-col-12 p-lg-4">
-                <div className="card summary">
-                    <span className="title">Revenue</span>
-                    <span className="detail">Income for today</span>
-                    <span className="count revenue">$3,200</span>
+                    <span className="detail">Number of users</span>
+                    <span className="count revenue">{users.length}</span>
                 </div>
             </div>
 
             <div className="p-col-12 p-md-6 p-xl-3">
                 <div className="highlight-box">
-                    <div className="initials" style={{ backgroundColor: '#007be5', color: '#00448f' }}><span>TV</span></div>
+                    <div className="initials" style={{ backgroundColor: '#007be5', color: '#00448f' }}><span>TP</span></div>
                     <div className="highlight-details ">
                         <i className="pi pi-search"></i>
-                        <span>Total Queries</span>
-                        <span className="count">523</span>
+                        <span>Total PAPs</span>
+                        <span className="count">{surveys.length}</span>
                     </div>
                 </div>
             </div>
             <div className="p-col-12 p-md-6 p-xl-3">
                 <div className="highlight-box">
-                    <div className="initials" style={{ backgroundColor: '#ef6262', color: '#a83d3b' }}><span>TI</span></div>
+                    <div className="initials" style={{ backgroundColor: '#ef6262', color: '#a83d3b' }}><span>RP</span></div>
                     <div className="highlight-details ">
                         <i className="pi pi-question-circle"></i>
-                        <span>Total Issues</span>
-                        <span className="count">81</span>
+                        <span>Rejected PAPs</span>
+                        <span className="count">0</span>
                     </div>
                 </div>
             </div>
             <div className="p-col-12 p-md-6 p-xl-3">
                 <div className="highlight-box">
-                    <div className="initials" style={{ backgroundColor: '#20d077', color: '#038d4a' }}><span>OI</span></div>
+                    <div className="initials" style={{ backgroundColor: '#20d077', color: '#038d4a' }}><span>AP</span></div>
                     <div className="highlight-details ">
                         <i className="pi pi-filter"></i>
-                        <span>Open Issues</span>
-                        <span className="count">21</span>
+                        <span>Approved PAPs</span>
+                        <span className="count">0</span>
                     </div>
                 </div>
             </div>
@@ -141,12 +177,13 @@ export const Dashboard = () => {
                     <div className="initials" style={{ backgroundColor: '#f9c851', color: '#b58c2b' }}><span>CI</span></div>
                     <div className="highlight-details ">
                         <i className="pi pi-check"></i>
-                        <span>Closed Issues</span>
-                        <span className="count">60</span>
+                        <span>Pending PAPs</span>
+                        <span className="count">0</span>
                     </div>
                 </div>
             </div>
-
+{
+    /*
             <div className="p-col-12 p-md-6 p-lg-4">
                 <Panel header="Tasks" style={{ height: '100%' }}>
                     <ul className='task-list'>
@@ -330,6 +367,8 @@ export const Dashboard = () => {
                     </ul>
                 </Panel>
             </div>
+*/
+}                  
         </div>
     );
 }

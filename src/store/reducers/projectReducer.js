@@ -1,0 +1,23 @@
+const initialState = {
+    projects:[
+        // {id: '1', title: 'Lagos-Ibadan Road', owner:'FG'},
+        // {id: '2', title: 'Kaboji Farm', owner:'NISG'},
+        // {id: '3', title: 'Fourth Mainland bridge', owner:'LASG'},
+        // {id: '4', title: 'Eko Railway', owner:'LASG'}
+    ]
+}
+
+const projectReducer = (state = initialState, action) => {
+    switch (action.type) {
+        case 'CREATE_PROJECT':
+            console.log('created project', action.project);
+            return state;
+        case 'CREATE_PROJECT_ERROR':
+            console.log('create project error', action.err);
+            return state;
+        default:
+            return state;
+    }
+}
+
+export default projectReducer 

@@ -146,7 +146,7 @@ export const TableDemo = () => {
     };
 
     const actionTemplate = () => <Button type="button" icon="pi pi-cog" className="p-button-secondary"></Button>;
-
+ 
     const productsTableHeader = (
         <div className="table-header-container">
             <Button icon="pi pi-plus" label="Expand All" onClick={expandAll} className="p-mr-2" />

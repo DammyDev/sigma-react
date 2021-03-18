@@ -25,6 +25,8 @@ import { OverlayDemo } from './components/OverlayDemo';
 import { PanelDemo } from './components/PanelDemo';
 import { TableDemo } from './components/TableDemo';
 import { TreeDemo } from './components/TreeDemo';
+import {PAPList} from './components/PAPList';
+
 
 import { Calendar } from './pages/Calendar';
 import { Crud } from './pages/Crud';
@@ -52,6 +54,10 @@ import '@fullcalendar/timegrid/main.css';
 import './layout/flags/flags.css';
 import './layout/layout.scss';
 import './App.scss';
+import UserProvider from './UserProvider';
+import {SignIn} from './components/SignIn';
+import {auth} from './FirebaseConfig'
+import { PAPDetails } from './pages/PAPDetails';
 
 const App = () => {
 
@@ -66,13 +72,14 @@ const App = () => {
     let menuClick = false;
 
     useEffect(() => {
+        console.log('..currentUser', )
         if (mobileMenuActive) {
             addClass(document.body, 'body-overflow-hidden');
         }
         else {
             removeClass(document.body, 'body-overflow-hidden');
         }
-    }, [mobileMenuActive]);
+    }, [mobileMenuActive],auth);
 
     const onInputStyleChange = (inputStyle) => {
         setInputStyle(inputStyle);
@@ -128,7 +135,8 @@ const App = () => {
     }
 
     const menu = [
-        { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' },
+        { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/dashboard' },
+        { label: 'PAPs', icon: 'pi pi-fw pi-home', to: '/PAPList' },
         {
             label: 'UI Kit', icon: 'pi pi-fw pi-sitemap',
             items: [
@@ -166,7 +174,8 @@ const App = () => {
             items: [
                 { label: 'Crud', icon: 'pi pi-fw pi-user-edit', to: '/crud' },
                 { label: 'Calendar', icon: 'pi pi-fw pi-calendar-plus', to: '/calendar' },
-                { label: 'Empty Page', icon: 'pi pi-fw pi-circle-off', to: '/empty' }
+                { label: 'Empty Page', icon: 'pi pi-fw pi-circle-off', to: '/empty' },
+                { label: 'PAP Details', icon: 'pi pi-fw pi-circle-off', to: '/papdetails' }
             ]
         },
         {
@@ -267,7 +276,8 @@ const App = () => {
     });
 
     return (
-        <div className={wrapperClass} onClick={onWrapperClick}>
+        <UserProvider>
+            <div className={wrapperClass} onClick={onWrapperClick}>
             <AppTopbar onToggleMenu={onToggleMenu} />
 
             <CSSTransition classNames="layout-sidebar" timeout={{ enter: 200, exit: 200 }} in={isSidebarVisible()} unmountOnExit>
@@ -284,7 +294,10 @@ const App = () => {
                 layoutMode={layoutMode} onLayoutModeChange={onLayoutModeChange} layoutColorMode={layoutColorMode} onColorModeChange={onColorModeChange} />
 
             <div className="layout-main">
-                <Route path="/" exact component={Dashboard} />
+                <Route path="/" exact component={SignIn} />
+                <Route path="/dashboard" component={Dashboard} />
+                <Route path="/paplist" component={PAPList} />
+                <Route path="/papdetails" component={PAPDetails} />
                 <Route path="/formlayout" component={FormLayoutDemo} />
                 <Route path="/input" component={InputDemo} />
                 <Route path="/floatlabel" component={FloatLabelDemo} />
@@ -316,6 +329,8 @@ const App = () => {
             <AppFooter />
 
         </div>
+        </UserProvider>
+ 
     );
 
 }
