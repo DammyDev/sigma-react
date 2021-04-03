@@ -55,9 +55,10 @@ import './layout/flags/flags.css';
 import './layout/layout.scss';
 import './App.scss';
 import UserProvider from './UserProvider';
-import {SignIn} from './components/SignIn';
+import {LogIn} from './components/LogIn';
 import {auth} from './FirebaseConfig'
 import { PAPDetails } from './pages/PAPDetails';
+import firebase from './FirebaseConfig';
 
 const App = () => {
 
@@ -69,10 +70,21 @@ const App = () => {
     const [inputStyle, setInputStyle] = useState('outlined');
     const [ripple, setRipple] = useState(false);
     const sidebar = useRef();
+    const [authStatus, setAuthStatus] = useState(null);
     let menuClick = false;
 
     useEffect(() => {
-        console.log('..currentUser', )
+        //console.log('..currentUser', firebase.auth().currentUser.uid)
+        //firebase.auth().currentUser?.uid && setAuthStatus(true)
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+              // User is signed in.
+              setAuthStatus(true)
+            } else {
+              // No user is signed in.
+              setAuthStatus(false)
+            }
+          });
         if (mobileMenuActive) {
             addClass(document.body, 'body-overflow-hidden');
         }
@@ -258,7 +270,9 @@ const App = () => {
         return true;
     }
 
-    const logo = layoutColorMode === 'dark' ? 'assets/layout/images/logo-white.svg' : 'assets/layout/images/logo.svg';
+    // const logo = layoutColorMode === 'dark' ? 'assets/layout/images/logo-white.svg' : 'assets/layout/images/logo.svg';
+    const logo = layoutColorMode === 'dark' ? 'assets/layout/images/erap.png' : 'assets/layout/images/erap.png';
+
 
     const wrapperClass = classNames('layout-wrapper', {
         'layout-overlay': layoutMode === 'overlay',
@@ -278,15 +292,16 @@ const App = () => {
     return (
         <UserProvider>
             <div className={wrapperClass} onClick={onWrapperClick}>
-            <AppTopbar onToggleMenu={onToggleMenu} />
+            {/* <AppTopbar onToggleMenu={onToggleMenu} /> */}
 
             <CSSTransition classNames="layout-sidebar" timeout={{ enter: 200, exit: 200 }} in={isSidebarVisible()} unmountOnExit>
                 <div ref={sidebar} className={sidebarClassName} onClick={onSidebarClick}>
                     <div className="layout-logo">
-                        <img alt="Logo" src={logo} />
+                        <img alt="Logo" src={logo} /> eRAP
                     </div>
                     <AppProfile />
-                    <AppMenu model={menu} onMenuItemClick={onMenuItemClick} />
+                 { authStatus &&  <AppMenu model={menu} onMenuItemClick={onMenuItemClick} />}
+                   
                 </div>
             </CSSTransition>
 
@@ -294,7 +309,7 @@ const App = () => {
                 layoutMode={layoutMode} onLayoutModeChange={onLayoutModeChange} layoutColorMode={layoutColorMode} onColorModeChange={onColorModeChange} />
 
             <div className="layout-main">
-                <Route path="/" exact component={SignIn} />
+                <Route path="/" exact component={LogIn} />
                 <Route path="/dashboard" component={Dashboard} />
                 <Route path="/paplist" component={PAPList} />
                 <Route path="/papdetails" component={PAPDetails} />

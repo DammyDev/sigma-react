@@ -21,6 +21,7 @@ import { StateService } from '../service/StateService';
 import firebase, { auth, generateUserDocument, firestore } from '../FirebaseConfig';
 import { Calendar } from 'primereact/calendar';
 import moment from 'moment'
+import { Redirect } from 'react-router-dom'
 
 export const PAPDetails = () => {
 
@@ -1429,6 +1430,10 @@ export const PAPDetails = () => {
 
         return 'Select Sources';
     };
+
+    if (auth.currentUser == null) { 
+        return <Redirect to='/' />
+    }
 
     //console.log('Date:-', moment("Mar 17, 1988").format('MM-DD-yyyy'))
     return (

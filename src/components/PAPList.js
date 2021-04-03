@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Redirect } from 'react-router-dom'
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Toolbar } from 'primereact/toolbar';
@@ -192,6 +193,7 @@ export const PAPList = () => {
                 storageRef.child(`images/pap_image/${value.id}.png`)
                     .getDownloadURL()
                         .then(async (url) => {
+                            // console.log('url...', url)
                             const blob = await fetch(url).then(r => r.blob());
                             const image1 = Media.addImage(doc, blob, 60,60);
                             imgBlobArray.push({id:`${value.id}`, image: image1});
@@ -342,6 +344,11 @@ export const PAPList = () => {
         dt.current.exportCSV();
     }
 
+
+    if (auth.currentUser == null) { 
+        return <Redirect to='/' />
+    }
+
     return (
         <div className="p-grid table-demo">
             <div className="p-col-12">
@@ -363,7 +370,7 @@ export const PAPList = () => {
                         <Column field="title" header="Name" sortable body={titleBodyTemplate}></Column>
                         <Column field="project" header="Project" sortable body={projectBodyTemplate}></Column>
                         <Column field="updatedAt" header="Date" sortable body={updatedAtBodyTemplate}></Column>
-                        <Column field="createdBy" header="Enumerator" sortable body={enumeratorBodyTemplate}></Column>
+                        {/* <Column field="createdBy" header="Enumerator" sortable body={enumeratorBodyTemplate}></Column> */}
                         <Column field="status" header="Status" sortable body={statusBodyTemplate}></Column>
                         <Column headerStyle={{ width: '8rem', textAlign: 'center' }} bodyStyle={{ textAlign: 'center', overflow: 'visible' }} body={actionViewTemplate}></Column>
                     </DataTable>

@@ -6,7 +6,7 @@ import { Button } from 'primereact/button';
 import firebase, {auth, firestore} from '../FirebaseConfig';
 
 
-export const SignIn = () => {
+export const SignIn2 = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
@@ -62,7 +62,7 @@ const res = []
       <h4 className="text-3xl mb-2 text-center font-bold">Sign In</h4>
       <hr />
       <div className="border border-blue-400 mx-auto w-11/12 md:w-2/4 rounded py-8 px-4 md:px-8">
-        {error !== null && <div className = "py-4 bg-red-600 w-full text-white text-center mb-3">{error}</div>}
+        {error !== null && <div className = "py-4 bg-red-600 w-full text-red text-center mb-3">{error}</div>}
         <form className="">
             <div className="p-fluid p-col-3 p-md-3">
 
