@@ -297,7 +297,7 @@ const App = () => {
             <CSSTransition classNames="layout-sidebar" timeout={{ enter: 200, exit: 200 }} in={isSidebarVisible()} unmountOnExit>
                 <div ref={sidebar} className={sidebarClassName} onClick={onSidebarClick}>
                     <div className="layout-logo">
-                        <img alt="Logo" src={logo} /> eRAP
+                        <img alt="Logo" src={logo} />
                     </div>
                     <AppProfile />
                  { authStatus &&  <AppMenu model={menu} onMenuItemClick={onMenuItemClick} />}
