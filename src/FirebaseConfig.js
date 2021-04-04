@@ -5,7 +5,7 @@ import 'firebase/auth'
  // Your web app's Firebase configuration
   // For Firebase JS SDK v7.20.0 and later, measurementId is optional
   var firebaseConfig = {
-    apiKey: "AIzaSyARChRknUCjssKY5IDokGprSbt5BLWOtis",
+    apiKey: "",
     authDomain: "erap-47584.firebaseapp.com",
     databaseURL: "https://erap-47584.firebaseio.com",
     projectId: "erap-47584",
